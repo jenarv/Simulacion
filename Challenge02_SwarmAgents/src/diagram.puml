@@ -1,0 +1,103 @@
+@startuml
+
+class DataSet {
+    - double[][] x
+    - double[] y
+    + DataSet(String filePath, int sheetNum)
+    - readDataFromExcel(String filePath, int sheetNum)
+    + printDataSet()
+    + double[][] getX()
+    + double[] getY()
+}
+
+class ParticleAgent {
+    - double[] position
+    - double[] velocity
+    - double[] bestPosition
+    - double bestFitness
+    - Random random
+    - DataSet dataSet
+    + setup()
+    - initializeParticle()
+    - evaluate(double[] position)
+    - updateVelocity(double[] globalBestPosition)
+    - updatePosition()
+}
+
+class ParticleBehaviour {
+        + onTick()
+        - parseMessage(ACLMessage msg)
+        - arrayToString(double[] array)
+    }
+
+class CoordinatorAgent {
+    - double[] globalBestPosition
+    - double globalBestFitness
+    - int numDimensions
+    - int numParticles
+    - int maxIterations
+    - int currentIteration
+    + setup()
+}
+
+class CoordinatorBehaviour {
+        + onTick()
+        - parseMessage(String content)
+        - arrayToString(double[] array)
+        - printBestEquationAndPredictions()
+        - makePredictions(double[][] inputs)
+    }
+
+class SwarmAgent {
+    - static final String FILE_PATH
+    - int SHEET_NUM
+    - static final int MAX_ITERATIONS
+    - DataSet dataSet
+    + setup()
+}
+
+class Regression {
+    - double[] x
+    - double[] y
+    - double slope
+    - double intercept
+    + Regression(double[] x, double[] y, double beta0, double beta1)
+    + getSlope()
+    + getIntercept()
+    + fit()
+    + predict(double xValue)
+}
+
+class PSO {
+    - static final int NUM_PARTICLES
+    - static final int NUM_DIMENSIONS
+    - static final int MAX_ITERATIONS
+    - static final double INERTIA_WEIGHT
+    - static final double COGNITIVE_COMPONENT
+    - static final double SOCIAL_COMPONENT
+    - static final double LOWER_BOUND
+    - static final double UPPER_BOUND
+    - Particle[] particles
+    - double[] globalBestPosition
+    - double globalBestFitness
+    - Random random
+    - DataSet dataSet
+    - Regression regression
+    + PSO(DataSet dataSet)
+    - initializeParticle(Particle particle)
+    - evaluate(double[] position)
+    - updateVelocity(Particle particle)
+    - updatePosition(Particle particle)
+    + run()
+}
+
+DataSet -- Regression
+PSO -- Regression
+
+CoordinatorAgent -- CoordinatorBehaviour
+CoordinatorBehaviour -- PSO
+CoordinatorBehaviour -- ParticleAgent
+ParticleAgent -- ParticleBehaviour
+SwarmAgent -- ParticleAgent
+
+@enduml

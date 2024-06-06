@@ -1,0 +1,215 @@
+@startuml
+class ClientAgent {
+    + void setup()
+    + void addBehaviour(OneShotBehaviour behaviour)
+    + void addBehaviour(CyclicBehaviour behaviour)
+    + void send(ACLMessage msg)
+    + ACLMessage receive()
+    + void block()
+}
+
+class DataSet {
+    - double[] x
+    - double[] y
+    + DataSet(String filePath, int sheetNum)
+    - void readDataFromExcel(String filePath, int sheetNum)
+    + void printDataSet()
+    + double[] getX()
+    + double[] getY()
+}
+
+class FinderAgent {
+    - double[] xValues
+    - double[] yValues
+    - String clientAID
+    - double bestFitness
+    - ACLMessage bestProposal
+    + void setup()
+    + void addBehaviour(CyclicBehaviour behaviour)
+    + void send(ACLMessage msg)
+    + ACLMessage receive()
+    + void block()
+    - void handleProposal(ACLMessage proposal)
+    + void takeDown()
+}
+
+class GeneticAgent {
+    - Chromosome bestChromosome
+    - static int POPULATION_SIZE
+    + void setup()
+    + void addBehaviour(CyclicBehaviour behaviour)
+    + void send(ACLMessage msg)
+    + ACLMessage receive()
+    + void block()
+    + void takeDown()
+}
+
+class Chromosome {
+    - double beta0
+    - double beta1
+    - double fitness
+    + Chromosome(double beta0, double beta1)
+    + double getBeta0()
+    + void setBeta0(double beta0)
+    + double getBeta1()
+    + void setBeta1(double beta1)
+    + double getFitness()
+    + void setFitness(double fitness)
+}
+
+class GeneticAlgorithm {
+    - static int CHROMOSOME_LENGTH
+    - static double BETA0_MIN
+    - static double BETA0_MAX
+    - static double BETA1_MIN
+    - static double BETA1_MAX
+    - static double CROSSOVER_RATE
+    - static double MUTATION_RATE
+    - static int ELITISM_COUNT
+    - int populationSize
+    + GeneticAlgorithm(int populationSize)
+    + Chromosome[] initializePopulation()
+    + void crossover(Chromosome[] population, Chromosome[] newPopulation)
+    + Chromosome[] crossover(Chromosome parent1, Chromosome parent2)
+    + Chromosome selectParent(Chromosome[] population)
+    + double[] runGeneticAlgorithm(double[] x, double[] y, int maxGenerations)
+    + void calculateFitness(Chromosome[] population, double[] x, double[] y)
+    + void mutate(Chromosome chromosome)
+}
+
+GeneticAgent "1" -- "1" Chromosome
+GeneticAgent "1" -- "1" GeneticAlgorithm
+
+ClientAgent "1" -- "*" OneShotBehaviour
+ClientAgent "1" -- "*" CyclicBehaviour
+
+FinderAgent "1" -- "*" CyclicBehaviour
+
+GeneticAgent "1" -- "*" CyclicBehaviour
+
+class Agent {
+    +void setup()
+    +void takeDown()
+}
+
+class CyclicBehaviour {
+    +void action()
+}
+
+class ACLMessage {
+    -int performative
+    -String content
+    +int REQUEST
+    +int PROPOSE
+}
+
+class GradientAgent {
+    +void setup()
+    +void takeDown()
+}
+
+class GradientDescent {
+    -double beta0
+    -double beta1
+    -DataSet dataSet
+    -double learningRate
+    +GradientDescent(DataSet data)
+    +void train(int epoch)
+    +double getBeta0()
+    +double getBeta1()
+    -double calculateBeta(int index)
+    -double calculateMSE()
+}
+
+class MainContainer {
+    +void main(String[] args)
+    -void createAgentWithSniffer(Runtime rt, String agentName)
+}
+
+class Regression {
+    -double[] x
+    -double[] y
+    -double B1
+    -double B0
+    +Regression(double[] x, double[] y)
+    +Regression(double[] x, double[] y, double beta0, double beta1)
+    +double getB1()
+    +double getB0()
+    +void fit()
+    +double predict(double xValue)
+    +double getRSquared()
+}
+
+class RegressionAgent {
+    +void setup()
+    +void takeDown()
+}
+
+class SwarmAgent {
+    -static final int NUM_DIMENSIONS
+    +void setup()
+    +void takeDown()
+}
+
+class Particle {
+    -double[] position
+    -double[] velocity
+    -double[] bestPosition
+    -double bestFitness
+}
+
+class PSO {
+    -static final int NUM_PARTICLES
+    -static final int NUM_DIMENSIONS
+    -static final int MAX_ITERATIONS
+    -static final double INERTIA_WEIGHT
+    -static final double COGNITIVE_COMPONENT
+    -static final double SOCIAL_COMPONENT
+    -static final double LOWER_BOUND
+    -static final double UPPER_BOUND
+    -Particle[] particles
+    -double[] globalBestPosition
+    -double globalBestFitness
+    -Random random
+    -DataSet dataSet
+    -Regression regression
+    +PSO(DataSet dataSet)
+    +double[] run()
+}
+
+Agent <|-- GradientAgent
+Agent <|-- RegressionAgent
+Agent <|-- SwarmAgent
+Agent <-- CyclicBehaviour
+CyclicBehaviour --> ACLMessage
+GradientAgent --> CyclicBehaviour
+GradientAgent --> DFAgentDescription
+GradientAgent --> ServiceDescription
+GradientAgent --> DFService
+GradientAgent --> DataSet
+GradientAgent --> GradientDescent
+MainContainer --> ProfileImpl
+MainContainer --> AgentContainer
+MainContainer --> AgentController
+MainContainer --> Profile
+MainContainer --> Sniffer
+MainContainer --> ProfileImpl
+MainContainer --> Profile
+MainContainer --> AgentContainer
+MainContainer --> AgentController
+MainContainer --> Sniffer
+RegressionAgent --> CyclicBehaviour
+RegressionAgent --> DFAgentDescription
+RegressionAgent --> ServiceDescription
+RegressionAgent --> DFService
+RegressionAgent --> DataSet
+RegressionAgent --> Regression
+SwarmAgent --> CyclicBehaviour
+SwarmAgent --> DFAgentDescription
+SwarmAgent --> ServiceDescription
+SwarmAgent --> DFService
+SwarmAgent --> DataSet
+SwarmAgent --> PSO
+Particle --> PSO
+
+@enduml

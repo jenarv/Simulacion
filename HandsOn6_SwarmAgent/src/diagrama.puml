@@ -1,0 +1,71 @@
+@startuml
+
+class DataSet {
+    - double[] x
+    - double[] y
+    + DataSet(String filePath, int sheetNum)
+    - readDataFromExcel(String filePath, int sheetNum)
+    + printDataSet()
+    + getX(): double[]
+    + getY(): double[]
+}
+
+class Particle {
+    - double[] position
+    - double[] velocity
+    - double[] bestPosition
+    - double bestFitness
+    + Particle(int dimensions)
+}
+
+class PSO {
+    - static final int NUM_PARTICLES = 30
+    - static final int NUM_DIMENSIONS = 2
+    - static final int MAX_ITERATIONS = 1000
+    - static final double INERTIA_WEIGHT = 0.5
+    - static final double COGNITIVE_COMPONENT = 1.5
+    - static final double SOCIAL_COMPONENT = 1.5
+    - static final double LOWER_BOUND = -1.0
+    - static final double UPPER_BOUND = 200.0
+    - Particle[] particles
+    - double[] globalBestPosition
+    - double globalBestFitness
+    - Random random
+    - DataSet dataSet
+    - Regression regression
+    + PSO(DataSet dataSet)
+    - initializeParticle(Particle particle)
+    - evaluate(double[] position): double
+    - updateVelocity(Particle particle)
+    - updatePosition(Particle particle)
+    + run()
+}
+
+class Regression {
+    - double[] x
+    - double[] y
+    - double slope
+    - double intercept
+    + Regression(double[] x, double[] y, double beta0, double beta1)
+    + getSlope(): double
+    + getIntercept(): double
+    + fit()
+    + predict(double xValue): double
+}
+
+class SwarmAgent {
+    - static final String FILE_PATH = "D:\\Universidad\\5SEMESTRE\\Simulacion\\RegressionDatasets\\benetton.xlsx"
+    - int SHEET_NUM = 0
+    - DataSet dataSet
+    + setup()
+    - PSOAlgorithmBehavior
+    + takeDown()
+}
+
+DataSet --> Regression
+PSO --> Particle
+PSO --> DataSet
+PSO --> Regression
+SwarmAgent --> DataSet
+
+@enduml

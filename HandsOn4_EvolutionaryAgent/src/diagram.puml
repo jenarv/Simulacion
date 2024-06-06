@@ -1,0 +1,73 @@
+@startuml
+
+class Chromosome {
+    -beta0: double
+    -beta1: double
+    -fitness: double
+    +Chromosome(beta0: double, beta1: double)
+    +getBeta0(): double
+    +setBeta0(beta0: double): void
+    +getBeta1(): double
+    +setBeta1(beta1: double): void
+    +getFitness(): double
+    +setFitness(fitness: double): void
+}
+
+class DataSet {
+    -x: double[]
+    -y: double[]
+    +DataSet(filePath: String, sheetNum: int)
+    -readDataFromExcel(filePath: String, sheetNum: int): void
+    +printDataSet(): void
+    +getX(): double[]
+    +getY(): double[]
+}
+
+class GeneticAgent {
+    -FILE_PATH: String
+    -SHEET_NUM: int
+    -dataSet: DataSet
+    +setup(): void
+    -GeneticAlgorithmBehavior
+    +takeDown(): void
+}
+
+class GeneticAlgorithm {
+    -CHROMOSOME_LENGTH: int
+    -BETA0_MIN: double
+    -BETA0_MAX: double
+    -BETA1_MIN: double
+    -BETA1_MAX: double
+    -CROSSOVER_RATE: double
+    -MUTATION_RATE: double
+    -ELITISM_COUNT: int
+    -populationSize: int
+    +GeneticAlgorithm(populationSize: int)
+    +initializePopulation(): Chromosome[]
+    +crossover(population: Chromosome[], newPopulation: Chromosome[]): void
+    +crossover(parent1: Chromosome, parent2: Chromosome): Chromosome[]
+    +selectParent(population: Chromosome[]): Chromosome
+    +runGeneticAlgorithm(x: double[], y: double[], maxGenerations: int): void
+    +calculateFitness(population: Chromosome[], x: double[], y: double[]): void
+    +mutate(chromosome: Chromosome): void
+}
+
+class Regression {
+    -x: double[]
+    -y: double[]
+    -slope: double
+    -intercept: double
+    +Regression(x: double[], y: double[], beta0: double, beta1: double)
+    +getSlope(): double
+    +getIntercept(): double
+    +fit(): void
+    +predict(xValue: double): double
+    +getRSquared(): double
+}
+
+GeneticAgent -- DataSet
+GeneticAgent -- GeneticAlgorithm
+GeneticAlgorithm -- Chromosome
+GeneticAlgorithm -- Regression
+
+@enduml
