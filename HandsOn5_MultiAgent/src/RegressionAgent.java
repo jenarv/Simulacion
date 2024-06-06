@@ -14,30 +14,30 @@ public class RegressionAgent extends Agent {
                 ACLMessage msg = receive();
                 if (msg != null) {
                     if (msg.getPerformative() == ACLMessage.REQUEST) {
-                        // Process the regression request
+                      
                         System.out.println("RegressionAgent received message: " + msg.getContent());
                         String[] parts = msg.getContent().split(",");
                         if (parts.length == 3) {
                             try {
-                                // Parse client AID, file path, and sheet number
+                                
                                 String clientAID = parts[0];
                                 String filePath = parts[1];
                                 int sheetNum = Integer.parseInt(parts[2]);
 
-                                // Assuming DataSet class and its methods are defined correctly
+                               
                                 DataSet dataSet = new DataSet(filePath, sheetNum);
                                 double[] xValues = dataSet.getX();
                                 double[] yValues = dataSet.getY();
 
-                                // Create Regression object and fit the model
+                                
                                 Regression regression = new Regression(xValues, yValues);
                                 regression.fit();
 
-                                // Get coefficients
+                                
                                 double B1 = regression.getB1();
                                 double B0 = regression.getB0();
 
-                                // Send the result to the FinderAgent as a proposal
+                               
                                 ACLMessage proposal = new ACLMessage(ACLMessage.PROPOSE);
                                 proposal.addReceiver(new jade.core.AID("Finder", jade.core.AID.ISLOCALNAME));
                                 proposal.setContent(B1 + "," + B0);
@@ -57,7 +57,7 @@ public class RegressionAgent extends Agent {
             }
         });
 
-        // Register the service offered by the regression agent with the DF
+        
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -71,9 +71,9 @@ public class RegressionAgent extends Agent {
         }
     }
 
-    // Clean-up operations
+    
     protected void takeDown() {
-        // Deregister the service upon termination
+        
         try {
             DFService.deregister(this);
         } catch (FIPAException fe) {
