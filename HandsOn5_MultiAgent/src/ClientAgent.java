@@ -12,15 +12,14 @@ public class ClientAgent extends Agent {
     protected void setup() {
         addBehaviour(new OneShotBehaviour(this) {
             public void action() {
-                // Crear un nuevo DFAgentDescription para consultar el DF
+                
                 DFAgentDescription template = new DFAgentDescription();
-                // Crear un nuevo ServiceDescription para especificar el servicio
                 ServiceDescription sd = new ServiceDescription();
-                // Establecer el tipo de servicio que busca el cliente
+                
                 sd.setType("Finder");
                 template.addServices(sd);
                 try {
-                    // Buscar agentes que ofrezcan el servicio especificado (Finder)
+                    
                     DFAgentDescription[] result = DFService.search(myAgent, template);
                     if (result.length > 0) {
 
@@ -76,17 +75,3 @@ public class ClientAgent extends Agent {
         });
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
