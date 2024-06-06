@@ -32,7 +32,7 @@ public class CoordinatorAgent extends Agent {
             if (currentIteration >= maxIterations) {
                 System.out.println("Coordinator: Reached max iterations. Stopping.");
                 try {
-                    Thread.sleep(2000); // Wait for 2 seconds before printing results
+                    Thread.sleep(2000); 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -97,13 +97,13 @@ public class CoordinatorAgent extends Agent {
             equation.append(" + ").append(globalBestPosition[2]).append(" * Advertising");
             System.out.println(equation);
 
-            // Print the betas
+            
             System.out.println("Beta Coefficients:");
             System.out.println("Intercept (Beta 0): " + globalBestPosition[0]);
             System.out.println("Year (Beta 1): " + globalBestPosition[1]);
             System.out.println("Advertising (Beta 2): " + globalBestPosition[2]);
 
-            // Making predictions for specified (Advertising, Year) pairs
+            
             double[][] inputs = {
                     {23, 1},
                     {26, 2},
@@ -121,9 +121,9 @@ public class CoordinatorAgent extends Agent {
         private double[] makePredictions(double[][] inputs) {
             double[] predictions = new double[inputs.length];
             for (int i = 0; i < inputs.length; i++) {
-                double prediction = globalBestPosition[0]; // Intercept
-                prediction += globalBestPosition[1] * inputs[i][1]; // Year
-                prediction += globalBestPosition[2] * inputs[i][0]; // Advertising
+                double prediction = globalBestPosition[0]; 
+                prediction += globalBestPosition[1] * inputs[i][1]; 
+                prediction += globalBestPosition[2] * inputs[i][0]; 
                 predictions[i] = prediction;
             }
             return predictions;
