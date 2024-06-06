@@ -11,7 +11,7 @@ import java.util.Random;
 public class GeneticAgent extends Agent {
 
     private Chromosome bestChromosome;
-    private static final int POPULATION_SIZE = 100; // Define the population size here
+    private static final int POPULATION_SIZE = 100; 
 
     protected void setup() {
         addBehaviour(new CyclicBehaviour(this) {
@@ -19,30 +19,26 @@ public class GeneticAgent extends Agent {
                 ACLMessage msg = receive();
                 if (msg != null) {
                     if (msg.getPerformative() == ACLMessage.REQUEST) {
-                        // Process the genetic algorithm request
+                       
                         System.out.println("GeneticAgent received message: " + msg.getContent());
                         String[] parts = msg.getContent().split(",");
-                        if (parts.length == 3) { // Adjusted to expect three parts
+                        if (parts.length == 3) { 
                             try {
-                                // Parse client AID, file path, and sheet number
+                                
                                 String clientAID = parts[0];
                                 String filePath = parts[1];
                                 int sheetNum = Integer.parseInt(parts[2]);
-
-                                // Assuming DataSet class and its methods are defined correctly
+                                
                                 DataSet dataSet = new DataSet(filePath, sheetNum);
                                 double[] xValues = dataSet.getX();
                                 double[] yValues = dataSet.getY();
 
-                                // Create and run GeneticAlgorithm with the internally defined population size
                                 GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
                                 double[] coefficients = geneticAlgorithm.runGeneticAlgorithm(xValues, yValues, 1000);
 
-                                // Get coefficients
                                 double B0 = coefficients[0];
                                 double B1 = coefficients[1];
 
-                                // Send the result to the FinderAgent as a proposal
                                 ACLMessage proposal = new ACLMessage(ACLMessage.PROPOSE);
                                 proposal.addReceiver(new jade.core.AID("Finder", jade.core.AID.ISLOCALNAME));
                                 proposal.setContent(B1 + "," + B0);
@@ -62,7 +58,6 @@ public class GeneticAgent extends Agent {
             }
         });
 
-        // Register the service offered by the genetic agent with the DF
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -76,9 +71,8 @@ public class GeneticAgent extends Agent {
         }
     }
 
-    // Clean-up operations
+
     protected void takeDown() {
-        // Deregister the service upon termination
         try {
             DFService.deregister(this);
         } catch (FIPAException fe) {
@@ -256,26 +250,19 @@ public class GeneticAgent extends Agent {
         }
 
         public void calculateFitness(Chromosome[] population, double[] x, double[] y) {
-            // Iterate over each chromosome in the population
             for (Chromosome chromosome : population) {
-                // Get the values of beta0 and beta1 from the chromosome
                 double beta0 = chromosome.getBeta0();
                 double beta1 = chromosome.getBeta1();
 
-                // Get the ideal values of linear regression
                 Regression regression = new Regression(x, y, beta0, beta1);
                 regression.fit();
                 double regressionBeta0 = regression.getB0();
                 double regressionBeta1 = regression.getB1();
 
                 double tolerance = 0.1;
-
-                // Calculate the closeness between the values of beta0 and beta1 from the chromosome
-                // and the fitted values from the regression
                 double closenessBeta0 = 1 - Math.abs((regressionBeta0 - beta0) / regressionBeta0);
                 double closenessBeta1 = 1 - Math.abs((regressionBeta1 - beta1) / regressionBeta1);
 
-                // Calculate the fitness of the chromosome as the average
                 double fitness = (closenessBeta0 + closenessBeta1) / 2;
 
                 chromosome.setFitness(fitness);
@@ -285,10 +272,7 @@ public class GeneticAgent extends Agent {
         public void mutate(Chromosome chromosome) {
             Random random = new Random();
 
-            // Check if mutation should be applied
             if (random.nextDouble() < MUTATION_RATE) {
-                // If the condition is met, generate a random value within the allowed range
-                // for beta0 and assign it to the mutated chromosome
                 chromosome.setBeta0(BETA0_MIN + (BETA0_MAX - BETA0_MIN) * random.nextDouble());
             }
             if (random.nextDouble() < MUTATION_RATE) {
