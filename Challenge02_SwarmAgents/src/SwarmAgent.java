@@ -14,7 +14,7 @@ public class SwarmAgent extends Agent {
         dataSet = new DataSet(FILE_PATH, SHEET_NUM);
 
         int numParticles = 100;
-        int numDimensions = dataSet.getX()[0].length + 1; // Number of coefficients + intercept
+        int numDimensions = dataSet.getX()[0].length + 1; 
 
         try {
             AgentContainer container = getContainerController();
