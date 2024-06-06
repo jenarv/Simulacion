@@ -19,12 +19,12 @@ public class SwarmAgent extends Agent {
         try {
             AgentContainer container = getContainerController();
 
-            // Create Coordinator Agent
+            
             Object[] coordArgs = {numDimensions, numParticles, MAX_ITERATIONS};
             AgentController coordinator = container.createNewAgent("coordinator", "CoordinatorAgent", coordArgs);
             coordinator.start();
 
-            // Create Particle Agents
+            
             for (int i = 0; i < numParticles; i++) {
                 Object[] particleArgs = {dataSet};
                 AgentController particle = container.createNewAgent("particle" + i, "ParticleAgent", particleArgs);
