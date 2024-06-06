@@ -21,7 +21,7 @@ public class ParticleAgent extends Agent {
     protected void setup() {
         Object[] args = getArguments();
         dataSet = (DataSet) args[0];
-        int numDimensions = dataSet.getX()[0].length + 1; // Number of coefficients + intercept
+        int numDimensions = dataSet.getX()[0].length + 1; 
 
         position = new double[numDimensions];
         velocity = new double[numDimensions];
@@ -49,9 +49,9 @@ public class ParticleAgent extends Agent {
 
         double sumSquaredErrors = 0.0;
         for (int i = 0; i < x.length; i++) {
-            double psoPredictedY = position[0]; // Intercept
+            double psoPredictedY = position[0];
             for (int j = 0; j < x[i].length; j++) {
-                psoPredictedY += position[j + 1] * x[i][j]; // Coefficients
+                psoPredictedY += position[j + 1] * x[i][j];
             }
             double actualY = y[i];
             double error = psoPredictedY - actualY;
@@ -91,7 +91,7 @@ public class ParticleAgent extends Agent {
         protected void onTick() {
             double fitness = evaluate(position);
 
-            if (fitness < bestFitness) { // Minimize fitness
+            if (fitness < bestFitness) { 
                 bestFitness = fitness;
                 System.arraycopy(position, 0, bestPosition, 0, position.length);
             }
